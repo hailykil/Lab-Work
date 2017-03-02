@@ -20,9 +20,9 @@ rm(list=ls())
   png <<- function(res=96, width=500, height=300, ...) grDevices::png(res=res, width=width, height=height, ...)
 }
 
-(load-file "../setupEnvironment.el")
-
 ```
+
+
 
 ```{r}
 housing <- read.csv("~/Desktop/eeb-177/Lab-Work/exercise-8/Rgraphics/dataSets/landdata-states.csv")
@@ -64,8 +64,11 @@ p1 + geom_point(aes(size = 2), color="red")
 
 p1 + geom_point(aes(color=Home.Value, shape = region))
 
-ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point()
 ```
+
+
+
+
 
 ```{r}
 dat <- read.csv("~/Desktop/eeb-177/Lab-Work/exercise-8/Rgraphics/dataSets/EconomistData.csv")
@@ -77,4 +80,115 @@ p2 +  geom_point(aes(size = 2), color="blue")
 p2 + geom_point(aes(shape = Region, color=HDI.Rank))
 
 ```
+
+
+
+
+
+```{r}
+args(geom_histogram)
+function (mapping = NULL, data = NULL, stat = "bin", binwidth = NULL, 
+    bins = NULL, origin = NULL, right = FALSE, position = "stack", 
+    na.rm = FALSE, show.legend = NA, inherit.aes = TRUE, ...) 
+NULL
+args(stat_bin)
+function (mapping = NULL, data = NULL, geom = "bar", position = "stack", 
+    width = 0.9, drop = FALSE, right = FALSE, binwidth = NULL, 
+    bins = NULL, origin = NULL, breaks = NULL, na.rm = FALSE, 
+    show.legend = NA, inherit.aes = TRUE, ...) 
+NULL
+
+housing <- read.csv("~/Desktop/eeb-177/Lab-Work/exercise-8/Rgraphics/dataSets/landdata-states.csv")
+p2 <- ggplot(housing, aes(x = Home.Value))
+p2 + geom_histogram()
+
+p2 + geom_histogram(stat = "bin", binwidth=4000)
+
+housing.sum <- aggregate(housing["Home.Value"], housing["State"], FUN=mean)
+rbind(head(housing.sum), tail(housing.sum))
+
+ggplot(housing.sum, aes(x=State, y=Home.Value)) + 
+  geom_bar(stat="identity")
+```
+
+```{r}
+dat <- read.csv("~/Desktop/eeb-177/Lab-Work/exercise-8/Rgraphics/dataSets/EconomistData.csv")
+
+p2 <- ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point()
+
+p2 +  geom_point(aes(size = 2), color="blue")
+p2 + geom_point(aes(shape = Region, color=HDI.Rank))
+
+p2 + geom_point(aes(color = HDI.Rank)) + geom_smooth()
+p2 + geom_point(aes(color = HDI.Rank)) + stat_smooth()
+
+dat$pred.SC <- predict(lm(HDI ~ log(CPI), data = dat))
+p2 <- ggplot(dat, aes(x = log(CPI), y = HDI))
+p2 + geom_point(aes(color = HDI.Rank)) + geom_line(aes(y = pred.SC))
+
+```
+
+
+```{r}
+p3 <- ggplot(housing,
+             aes(x = State, y = Home.Price.Index)) + theme(legend.position="top", axis.text=element_text(size = 6))
+(p4 <- p3 + geom_point(aes(color = Date), alpha = 0.5, size = 1.5, position = position_jitter(width = 0.25, height = 0)))
+
+p4 + scale_x_discrete(name="State Abbreviation") +  scale_color_continuous(name="", breaks = c(1976, 1994, 2013), labels = c("'76", "'94", "'13"))
+
+p4 + scale_x_discrete(name="State Abbreviation") + scale_color_continuous(name="", breaks = c(1976, 1994, 2013), labels = c("'76", "'94", "'13"), low = "blue", high = "red")
+
+```
+
+
+
+
+
+
+
+
+
+```{r}
+
+dat <- read.csv("~/Desktop/eeb-177/Lab-Work/exercise-8/Rgraphics/dataSets/EconomistData.csv")
+
+p2 <- ggplot(dat, aes(x = CPI, y = HDI, size = HDI.Rank)) + geom_point()
+p2 +  geom_point(aes(size = 2), color="blue")
+ggplot(dat, aes(x=Region, y=HDI)) + geom_bar(stat="identity")
+
+p3 <- ggplot(dat, aes(x = Region, y = HDI)) + theme(legend.position="top", axis.text=element_text(size = 6))
+(p4 <- p3 + geom_point(aes(color = HDI.Rank), alpha = 0.5, size = 1.5, position = position_jitter(width = 0.25, height = 0)))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
